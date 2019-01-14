@@ -1,0 +1,19 @@
+{
+    "name": "database/document-store-abstraction",
+    "description": "abstraction layer for document store databases",
+    "type": "project",
+    "require": {
+        "phpunit/phpunit": "^7.5",
+        "aws/aws-sdk-php": "^3.85"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\":"src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\":"src/tests"
+        }       
+    }
+}
