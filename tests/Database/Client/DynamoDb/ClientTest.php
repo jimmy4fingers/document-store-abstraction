@@ -5,6 +5,7 @@ namespace App\Tests\Database\Client\DynamoDb;
 use PHPUnit\Framework\TestCase;
 use App\Database\Client\DynamoDb\Client;
 use App\Database\Client\DynamoDb\MarshalerFactory;
+use App\Database\Client\DynamoDb\PayloadFactory;
 use App\Database\Client\DocumentStoreClient;
 use App\Tests\AWS\Factories\DynamoDbFactory;
 
@@ -20,10 +21,10 @@ class ClientTest extends TestCase
     public function testConstructor()
     {
         $dynamoDbClient = $this->clientFactory->make(['test']);
-        $client = new Client($dynamoDbClient, new MarshalerFactory());
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
         $reflector = new \ReflectionClass($client);
-		$property = $reflector->getProperty('dynamo');
+		$property = $reflector->getProperty('dynamoDbClient');
         $property->setAccessible(true);
         
         // test correct object set on private property
@@ -35,7 +36,7 @@ class ClientTest extends TestCase
     public function testCreate()
     {
         $dynamoDbClient = $this->clientFactory->make(['test']);
-        $client = new Client($dynamoDbClient, new MarshalerFactory());
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
         $payload = ['test'=>'data'];
 

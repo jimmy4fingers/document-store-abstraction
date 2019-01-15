@@ -16,23 +16,30 @@ class Client implements DocumentStoreClient
      *
      * @var AwsClientInterface
      */
-    private $dynamo;
+    private $dynamoDbClient;
 
     /**
-     * Marshaler factory
+     * Payload factory
      *
-     * @var MarshalerFactory
+     * @var PayloadFactory
      */
-    private $marshalerFactory;
+    private $factory;
+
+    /**
+     * @todo create handler object for responses
+     *
+     * @var [type]
+     */
+    private $responseHandeler;
 
     /**
      * @param AwsClientInterface $awsDynamoClient
-     * @param MarshalerFactory $marshalerFactory
+     * @param PayloadFactory $factory
      */
-    public function __construct(AwsClientInterface $awsDynamoClient, MarshalerFactory $marshalerFactory)
+    public function __construct(AwsClientInterface $awsDynamoClient, PayloadFactory $factory)
     {
-        $this->dynamo = $awsDynamoClient;
-        $this->marshalerFactory = $marshalerFactory;
+        $this->dynamoDbClient = $awsDynamoClient;
+        $this->factory = $factory;
     }
 
     /**
@@ -44,10 +51,13 @@ class Client implements DocumentStoreClient
      */
     public function create(string $table, array $data): bool
     {
+        $putItemPayload = $this->factory->makePutItem();
+
         try {
-            $this->dynamo->putItem($this->getPayload($table, $data));
+            $this->responseHandeler = $this->dynamoDbClient->putItem(
+                $putItemPayload->get($table, $data)
+            );
         } catch (DynamoDbException $e) {
-            // @todo use logger
             return false;
         }
 
@@ -64,31 +74,30 @@ class Client implements DocumentStoreClient
      */
     public function update(string $table, string $id, array $data): bool
     {
-        // todo
+        try {
+            $this->responseHandeler = $this->dynamoDbClient->updateItem(
+                $this->getUpdateItemPayload($table, $data)
+            );
+        } catch (DynamoDbException $e) {
+            return false;
+        }
+
         return true;
     }
 
     /**
      * @todo public function query($options);
      */
+    public function query()
+    {}
 
-    /**
-     * creates DynamoDB payload
-     *
-     * @param string $table
-     * @param array $data
-     * @return array
-     */
-    private function getPayload(string $table, array $data): array
+     /**
+      * get the last client response.
+      *
+      * @return mixed
+      */
+    public function getLastResponse()
     {
-        $marshaler = $this->marshalerFactory->make();
-        $item = $marshaler->marshalJson(json_encode($data));
-
-        $payload = [
-            'TableName' => $table,
-            'Item' => $item
-        ];
-
-        return $payload;
+        return $this->responseHandeler;
     }
 }
