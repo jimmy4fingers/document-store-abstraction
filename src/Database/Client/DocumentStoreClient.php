@@ -18,11 +18,11 @@ interface DocumentStoreClient
     /**
      * update item in the storage engine
      *
-     * @param string $id
+     * @param array $keys
      * @param array $data
      * @return boolean
      */
-    public function update(string $table, string $id, array $data): bool;
+    public function update(string $table, array $keys, array $data): bool;
 
     /**
      * @todo public function query($options);

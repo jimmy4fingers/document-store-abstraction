@@ -21,7 +21,7 @@ class PayloadFactory
         return new PutItem($this->marshalerFactory);
     }
 
-    public function makeUpdate(): Payload
+    public function makeUpdateItem(): Payload
     {
         return new UpdateItem($this->marshalerFactory);
     }

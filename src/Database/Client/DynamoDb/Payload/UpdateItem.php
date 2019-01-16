@@ -90,7 +90,7 @@ class UpdateItem implements Payload
      */
     public function setKey(array $value)
     {
-        $this->key = json_encode($value);
+        $this->key = $value;
     }
 
     /**
@@ -123,7 +123,7 @@ class UpdateItem implements Payload
      */
     public function setExpressionAttributeValues(array $value)
     {
-        $this->expressionAttributeValues = json_encode($value);
+        $this->expressionAttributeValues = $value;
     }
 
     /**
@@ -169,7 +169,7 @@ class UpdateItem implements Payload
         $expressionAttributes = [];
 
         foreach ($data as $key => $value) {
-            $hashkey = ':' . hash("md5", json_encode([$key, $value]));
+            $hashkey = ':' . hash("md5", uniqid(rand(), true));
             $expressionAttributes[$hashkey] = $value;
             $updateExp[] = "$key = $hashkey";
         }
@@ -189,19 +189,16 @@ class UpdateItem implements Payload
      * @return array
      */
     private function getPayload(\Aws\DynamoDb\Marshaler $marshaler): array
-    {
-        $key = $marshaler->marshalJson($this->key);
-        $eav = $marshaler->marshalJson($this->expressionAttributeValues);
-        
+    {   
         $payload['TableName'] = $this->table;
-        $payload['Key'] = $key;
+        $payload['Key'] = $marshaler->marshalItem($this->key);
         $payload['UpdateExpression'] = $this->updateExpression;
 
         if (!is_null($this->updateExpression)){
             $payload['ConditionExpression'] = $this->conditionExpression;
         }
 
-        $payload['ExpressionAttributeValues'] = $eav;
+        $payload['ExpressionAttributeValues'] = $marshaler->marshalItem($this->expressionAttributeValues);
         $payload['ReturnValues'] = $this->returnValues;
 
         return $payload;

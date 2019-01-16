@@ -44,13 +44,9 @@ class PutItem implements Payload
      */
     private function getPayload(\Aws\DynamoDb\Marshaler $marshaler, string $table, array $data): array
     {
-        $item = $marshaler->marshalJson(
-            json_encode($data)
-        );
-
         $payload = [
             'TableName' => $table,
-            'Item' => $item
+            'Item' => $marshaler->marshalItem($data)
         ];
 
         return $payload;

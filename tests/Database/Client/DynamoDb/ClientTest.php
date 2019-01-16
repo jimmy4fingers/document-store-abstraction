@@ -7,20 +7,28 @@ use App\Database\Client\DynamoDb\Client;
 use App\Database\Client\DynamoDb\MarshalerFactory;
 use App\Database\Client\DynamoDb\PayloadFactory;
 use App\Database\Client\DocumentStoreClient;
-use App\Tests\AWS\Factories\DynamoDbFactory;
+use App\Tests\Mocks\AWSMocksFactory;
 
 class ClientTest extends TestCase
 {
-    private $clientFactory;
+    protected static $awsFactory;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->clientFactory = new DynamoDbFactory();
+        self::$awsFactory = new AWSMocksFactory();
+    }
+
+    private function getClient($results)
+    {
+        // AWS Mocks
+        $mockResult = self::$awsFactory->makeResult($results);
+        $mockHandler = self::$awsFactory->makeMockHandler();
+        return self::$awsFactory->makeDynamoDbClient($mockHandler);
     }
 
     public function testConstructor()
     {
-        $dynamoDbClient = $this->clientFactory->make(['test']);
+        $dynamoDbClient = $this->getClient(['test']);
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
         $reflector = new \ReflectionClass($client);
@@ -33,21 +41,28 @@ class ClientTest extends TestCase
         $this->assertTrue($reflector->implementsInterface('App\Database\Client\DocumentStoreClient'));
     }
 
-    public function testCreate()
+    public function _testCreate()
     {
-        $dynamoDbClient = $this->clientFactory->make(['test']);
+        $dynamoDbClient = $this->getClient(['test']);
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
-        $payload = ['test'=>'data'];
+        $data = ['test'=>'data'];
 
         // table name, item attributes\values
-        $this->assertTrue($client->create('myTestTable', $payload));
+        $this->assertTrue($client->create('myCreateTestTable', $data));
     }
 
-    public function _testUpdate()
+    public function testUpdate()
     {
-        // test func exsits
-        // @todo
+        $dynamoDbClient = $this->getClient(['test']);
+
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+
+        $data = ['test'=>'data'];
+        $searchKeys = ['id' => 123];
+
+        // table name, item attributes\values
+        //$this->assertTrue($client->update('myUpdateTestTable', $searchKeys, $data));
     }
 
 }

@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Tests\AWS\Factories;
+namespace App\Tests\Mocks;
 
 use Aws\Result;
 use Aws\MockHandler;
@@ -9,19 +9,24 @@ use Aws\CommandInterface;
 use Psr\Http\Message\RequestInterface;
 use Aws\Exception\AwsException;
 
-class DynamoDbFactory
+class AWSMocksFactory
 {
-    public function make(array $result)
+    public function makeDynamoDbClient(MockHandler $mock)
     {
-        $mock = new MockHandler();
-
-        // Return a mocked result
-        $mock->append(new Result(['foo' => 'bar']));
-
         return new DynamoDbClient([
             'region'  => 'us-west-2',
             'version' => 'latest',
             'handler' => $mock
         ]);
+    }
+
+    public function makeMockHandler()
+    {
+        return new MockHandler();
+    }
+
+    public function makeResult($result)
+    {
+        return new Result($result);
     }
 }
