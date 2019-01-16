@@ -41,7 +41,7 @@ class ClientTest extends TestCase
         $this->assertTrue($reflector->implementsInterface('App\Database\Client\DocumentStoreClient'));
     }
 
-    public function _testCreate()
+    public function testCreate()
     {
         $dynamoDbClient = $this->getClient(['test']);
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
@@ -62,7 +62,7 @@ class ClientTest extends TestCase
         $searchKeys = ['id' => 123];
 
         // table name, item attributes\values
-        //$this->assertTrue($client->update('myUpdateTestTable', $searchKeys, $data));
+        $this->assertTrue($client->update('myUpdateTestTable', $searchKeys, $data));
     }
 
 }

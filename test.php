@@ -77,12 +77,43 @@ $putItemdata =
 // var_dump($response);exit;
 
 /** ========= Update Item ========= */
+// $tableName = 'putItemTestTable';
+
+// $year = 2015;
+// $title = 'The Big New Movie';
+// $key = $marshaler->marshalJson('
+//     {
+//         "Id": 543269300594
+//     }
+// ');
+ 
+// $eav = $marshaler->marshalJson('
+//     {
+//         ":r": [ "Larry", "Moe", "Curly" ],
+//         ":p": 40
+//     }
+// ');
+
+// $params = [
+//     'TableName' => $tableName,
+//     'Key' => $key,
+//     'UpdateExpression' => 
+//         'set myname = :r, age = :p',
+//     'ExpressionAttributeValues'=> $eav,
+//     'ReturnValues' => 'UPDATED_NEW'
+// ];
+
+// $response = $dynamoDbClient->updateItem($params);
+// var_dump($response);exit;
+
 $updateItemData =
 [
-    'age' => 40
+    'myname' => ['first'=>'jim']
 ];
 
-$response = $dynamoDbClient->updateItem(['TableName' => 'putItemTestTable', 'Key' => ['Id' => ['N' => 543269300594]], 'AttributeUpdates' => $marshaler->marshalItem($updateItemData)]);
+$key = ['Id' => 543269300594];
+
+$response = $client->update('putItemTestTable', $key, $updateItemData);
 var_dump($response);exit;
 
 /** ========= Get Items ========= */
@@ -98,5 +129,5 @@ var_dump($response);exit;
 // $response = $client->create('putItemTestTable', $putItemdata);
 // var_dump($response);exit;
 
-$response = $client->update('putItemTestTable', $putItemdata);
-var_dump($response);exit;
+// $response = $client->update('putItemTestTable', $putItemdata);
+// var_dump($response);exit;

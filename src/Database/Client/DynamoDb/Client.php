@@ -55,7 +55,6 @@ class Client implements DocumentStoreClient
 
         // testing
         $payload = $putItemPayload->get($table, $data);
-        var_dump($payload);exit;
 
         try {
             $this->responseHandeler = $this->dynamoDbClient->putItem(
@@ -88,7 +87,7 @@ class Client implements DocumentStoreClient
                 $updateItemPayload->get($table, $data)
             );
         } catch (DynamoDbException $e) {
-            var_dump($e->getMessage());exit;
+            //var_dump($e . '');exit;
             return false;
         }
         return true;

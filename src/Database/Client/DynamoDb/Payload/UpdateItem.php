@@ -194,13 +194,13 @@ class UpdateItem implements Payload
         $payload['Key'] = $marshaler->marshalItem($this->key);
         $payload['UpdateExpression'] = $this->updateExpression;
 
-        if (!is_null($this->updateExpression)){
+        if (!is_null($this->conditionExpression)){
             $payload['ConditionExpression'] = $this->conditionExpression;
         }
 
         $payload['ExpressionAttributeValues'] = $marshaler->marshalItem($this->expressionAttributeValues);
         $payload['ReturnValues'] = $this->returnValues;
-
+//var_dump($payload); exit;
         return $payload;
     }
 }
