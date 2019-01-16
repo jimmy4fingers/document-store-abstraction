@@ -1,12 +1,20 @@
-<?php 
+<?php
 
 namespace App\Database\Client\DynamoDb;
 
 use Aws\DynamoDb\Marshaler;
 
+/**
+ * AWS Marshaler factory
+ */
 class MarshalerFactory
 {
-    public function make()
+    /**
+     * makes Marshaler
+     *
+     * @return Marshaler
+     */
+    public function make(): Marshaler
     {
         return new Marshaler();
     }

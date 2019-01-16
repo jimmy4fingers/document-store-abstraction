@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Database\Client\DynamoDb\Payload;
 
@@ -18,7 +18,7 @@ class UpdateItem implements Payload
      * document name
      *
      * @var string
-     */    
+     */
     private $table;
 
     /**
@@ -74,7 +74,7 @@ class UpdateItem implements Payload
     /**
      * set table name
      *
-     * @param string $value
+     * @param  string $value
      * @return void
      */
     public function setTable(string $value)
@@ -85,7 +85,7 @@ class UpdateItem implements Payload
     /**
      * set search key
      *
-     * @param array $value
+     * @param  array $value
      * @return void
      */
     public function setKey(array $value)
@@ -96,7 +96,7 @@ class UpdateItem implements Payload
     /**
      * set update expression
      *
-     * @param string $value
+     * @param  string $value
      * @return void
      */
     public function setUpdateExpression(string $value)
@@ -107,7 +107,7 @@ class UpdateItem implements Payload
     /**
      * set condition expression
      *
-     * @param string $value
+     * @param  string $value
      * @return void
      */
     public function setConditionExpression(string $value)
@@ -118,7 +118,7 @@ class UpdateItem implements Payload
     /**
      * set expression attribute values
      *
-     * @param array $value
+     * @param  array $value
      * @return void
      */
     public function setExpressionAttributeValues(array $value)
@@ -129,7 +129,7 @@ class UpdateItem implements Payload
     /**
      * set return values
      *
-     * @param string $value
+     * @param  string $value
      * @return void
      */
     public function setReturnValues(string $value)
@@ -140,8 +140,8 @@ class UpdateItem implements Payload
     /**
      * gets DynamoDB "updateItem" payload
      *
-     * @param string $table
-     * @param array $data
+     * @param  string $table
+     * @param  array  $data
      * @return array
      */
     public function get(string $table, array $data): array
@@ -157,10 +157,10 @@ class UpdateItem implements Payload
     }
 
     /**
-     * takes key\value data and sets payload values for 
+     * takes key\value data and sets payload values for
      * ExpressionAttributeValues & UpdateExpression
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     private function setUpdateData(array $data)
@@ -183,24 +183,24 @@ class UpdateItem implements Payload
     /**
      * creates DynamoDB "updateItem" payload
      *
-     * @param Marshaler $marshaler
-     * @param string $table
-     * @param array $data
+     * @param  Marshaler $marshaler
+     * @param  string    $table
+     * @param  array     $data
      * @return array
      */
     private function getPayload(\Aws\DynamoDb\Marshaler $marshaler): array
-    {   
+    {
         $payload['TableName'] = $this->table;
         $payload['Key'] = $marshaler->marshalItem($this->key);
         $payload['UpdateExpression'] = $this->updateExpression;
 
-        if (!is_null($this->conditionExpression)){
+        if (!is_null($this->conditionExpression)) {
             $payload['ConditionExpression'] = $this->conditionExpression;
         }
 
         $payload['ExpressionAttributeValues'] = $marshaler->marshalItem($this->expressionAttributeValues);
         $payload['ReturnValues'] = $this->returnValues;
-//var_dump($payload); exit;
+
         return $payload;
     }
 }

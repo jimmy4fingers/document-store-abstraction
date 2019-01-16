@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Database\Client\DynamoDb\Payload;
 
@@ -25,8 +25,8 @@ class GetItem implements Payload
     /**
      * gets DynamoDB "putItem" payload
      *
-     * @param string $table
-     * @param array $keys
+     * @param  string $table
+     * @param  array  $keys
      * @return array
      */
     public function get(string $table, array $keys): array
@@ -37,9 +37,9 @@ class GetItem implements Payload
     /**
      * creates DynamoDB "getItem" payload
      *
-     * @param Marshaler $marshaler
-     * @param string $table
-     * @param array $keys
+     * @param  Marshaler $marshaler
+     * @param  string    $table
+     * @param  array     $keys
      * @return array
      */
     private function getPayload(\Aws\DynamoDb\Marshaler $marshaler, string $table, array $keys): array
