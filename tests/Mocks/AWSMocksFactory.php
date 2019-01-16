@@ -11,22 +11,25 @@ use Aws\Exception\AwsException;
 
 class AWSMocksFactory
 {
-    public function makeDynamoDbClient(MockHandler $mock)
+    public function mockDynamoDbClient(array $result)
     {
-        return new DynamoDbClient([
+        $mock = new MockHandler();
+
+        // Return a mocked result
+        $mock->append(new Result($result));
+
+        // You can provide a function to invoke; here we throw a mock exception
+        $mock->append(function (CommandInterface $cmd, RequestInterface $req) {
+            return new AwsException('Mock exception', $cmd);
+        });
+
+        // Create a client with the mock handler
+        $client = new DynamoDbClient([
             'region'  => 'us-west-2',
             'version' => 'latest',
             'handler' => $mock
         ]);
-    }
 
-    public function makeMockHandler()
-    {
-        return new MockHandler();
-    }
-
-    public function makeResult($result)
-    {
-        return new Result($result);
+        return $client;
     }
 }

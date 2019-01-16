@@ -18,17 +18,9 @@ class ClientTest extends TestCase
         self::$awsFactory = new AWSMocksFactory();
     }
 
-    private function getClient($results)
-    {
-        // AWS Mocks
-        $mockResult = self::$awsFactory->makeResult($results);
-        $mockHandler = self::$awsFactory->makeMockHandler();
-        return self::$awsFactory->makeDynamoDbClient($mockHandler);
-    }
-
     public function testConstructor()
     {
-        $dynamoDbClient = $this->getClient(['test']);
+        $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
         $reflector = new \ReflectionClass($client);
@@ -43,7 +35,8 @@ class ClientTest extends TestCase
 
     public function testCreate()
     {
-        $dynamoDbClient = $this->getClient(['test']);
+        $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
+
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
         $data = ['test'=>'data'];
@@ -54,7 +47,7 @@ class ClientTest extends TestCase
 
     public function testUpdate()
     {
-        $dynamoDbClient = $this->getClient(['test']);
+        $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
 
