@@ -43,7 +43,7 @@ class Client implements DocumentStoreClient
     }
 
     /**
-     * add item to the storage engine
+     * add item to dynamoDB
      *
      * @param string $table
      * @param array $data
@@ -68,7 +68,7 @@ class Client implements DocumentStoreClient
     }
     
     /**
-     * update item in the storage engine
+     * update item in dynamoDB
      *
      * @param string $table
      * @param array $keys
@@ -87,18 +87,36 @@ class Client implements DocumentStoreClient
                 $updateItemPayload->get($table, $data)
             );
         } catch (DynamoDbException $e) {
-            //var_dump($e . '');exit;
             return false;
         }
+
         return true;
     }
 
     /**
-     * @todo public function query($options);
+     * get item from dynamoDB
+     *
+     * @param string $table
+     * @param array $keys
+     * @return array
      */
-    public function get()
+    public function get(string $table, array $keys): array
     {
+        $getItemPayload = $this->factory->makeGetItem();
 
+        try {
+            $this->responseHandeler = $this->dynamoDbClient->getItem(
+                $getItemPayload->get($table, $keys)
+            );
+        } catch (DynamoDbException $e) {
+            return [];
+        }
+
+        if (is_null($this->responseHandeler['Item'])) {
+            return [];
+        }
+        
+        return $this->responseHandeler['Item'];
     }
 
      /**

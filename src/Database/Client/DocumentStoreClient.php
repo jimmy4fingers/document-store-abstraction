@@ -25,6 +25,11 @@ interface DocumentStoreClient
     public function update(string $table, array $keys, array $data): bool;
 
     /**
-     * @todo public function query($options);
+     * get item from the storage engine
+     *
+     * @param string $table
+     * @param array $keys
+     * @return array
      */
+    public function get(string $table, array $keys): array;
 }

@@ -58,4 +58,17 @@ class ClientTest extends TestCase
         $this->assertTrue($client->update('myUpdateTestTable', $searchKeys, $data));
     }
 
+    public function testGet()
+    {
+        $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
+
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+
+        $data = ['test'=>'data'];
+        $searchKeys = ['id' => 123];
+
+        // table name, item attributes\values
+        $this->assertSame($client->get('myUpdateTestTable', $searchKeys),[]);
+    }
+
 }

@@ -4,6 +4,7 @@ namespace App\Database\Client\DynamoDb;
 
 use App\Database\Client\DynamoDb\Payload\PutItem;
 use App\Database\Client\DynamoDb\Payload\UpdateItem;
+use App\Database\Client\DynamoDb\Payload\GetItem;
 use App\Database\Client\DynamoDb\Payload\Payload;
 //use App\Database\Client\Update;
 
@@ -24,5 +25,10 @@ class PayloadFactory
     public function makeUpdateItem(): Payload
     {
         return new UpdateItem($this->marshalerFactory);
+    }
+
+    public function makeGetItem(): Payload
+    {
+        return new GetItem($this->marshalerFactory);
     }
 }
