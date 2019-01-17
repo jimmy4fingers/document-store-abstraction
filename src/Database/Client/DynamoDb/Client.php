@@ -53,9 +53,6 @@ class Client implements DocumentStoreClient
     {
         $putItemPayload = $this->factory->makePutItem();
 
-        // testing
-        $payload = $putItemPayload->get($table, $data);
-
         try {
             $this->responseHandeler = $this->dynamoDbClient->putItem(
                 $putItemPayload->get($table, $data)
