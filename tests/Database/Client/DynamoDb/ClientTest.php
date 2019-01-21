@@ -3,10 +3,10 @@
 namespace App\Tests\Database\Client\DynamoDb;
 
 use PHPUnit\Framework\TestCase;
-use App\Database\Client\DynamoDb\Client;
-use App\Database\Client\DynamoDb\MarshalerFactory;
-use App\Database\Client\DynamoDb\PayloadFactory;
-use App\Database\Client\DocumentStoreClient;
+use App\Database\Clients\DynamoDb\Client;
+use App\Database\Clients\DynamoDb\MarshalerAdapter;
+use App\Database\Clients\DynamoDb\PayloadFactory;
+use App\Database\Clients\DocumentStoreClient;
 use App\Tests\Mocks\AWSMocksFactory;
 
 class ClientTest extends TestCase
@@ -21,7 +21,7 @@ class ClientTest extends TestCase
     public function testConstructor()
     {
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
-        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
 
         $reflector = new \ReflectionClass($client);
 		$property = $reflector->getProperty('dynamoDbClient');
@@ -30,14 +30,14 @@ class ClientTest extends TestCase
         // test correct object set on private property
         $this->assertSame($dynamoDbClient, $property->getValue($client));
         // test implements correct interface
-        $this->assertTrue($reflector->implementsInterface('App\Database\Client\DocumentStoreClient'));
+        $this->assertTrue($reflector->implementsInterface('App\Database\Clients\DocumentStoreClient'));
     }
 
     public function testCreate()
     {
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
-        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
 
         $data = ['test'=>'data'];
 
@@ -49,7 +49,7 @@ class ClientTest extends TestCase
     {
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
-        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
 
         $data = ['test'=>'data'];
         $searchKeys = ['id' => 123];
@@ -62,7 +62,7 @@ class ClientTest extends TestCase
     {
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
-        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerFactory()));
+        $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
 
         $data = ['test'=>'data'];
         $searchKeys = ['id' => 123];

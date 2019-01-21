@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Database\Client\DynamoDb\Payload;
+namespace App\Database\Clients\DynamoDb\Payload;
 
-use App\Database\Client\DynamoDb\MarshalerFactory;
+use App\Database\Clients\DynamoDb\Marshaler;
 
 /**
  * payload classes interface
@@ -10,9 +10,9 @@ use App\Database\Client\DynamoDb\MarshalerFactory;
 interface Payload
 {
     /**
-     * @param MarshalerFactory $marshalerFactory
+     * @param Marshaler $marshaler
      */
-    public function __construct(MarshalerFactory $marshalerFactory);
+    public function __construct(Marshaler $marshaler);
 
     /**
      * gets payload array

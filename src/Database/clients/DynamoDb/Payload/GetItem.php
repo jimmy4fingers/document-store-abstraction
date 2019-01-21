@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Database\Client\DynamoDb\Payload;
+namespace App\Database\Clients\DynamoDb\Payload;
 
-use App\Database\Client\DynamoDb\MarshalerFactory;
+use App\Database\Clients\DynamoDb\Marshaler;
 
 /**
  * class creats GetItem payloads to use with AWS SDK DynamoDbClient class
@@ -10,16 +10,16 @@ use App\Database\Client\DynamoDb\MarshalerFactory;
 class GetItem implements Payload
 {
     /**
-     * @var MarshalerFactory
+     * @var Marshaler
      */
-    private $marshalerFactory;
+    private $marshaler;
 
     /**
-     * @param MarshalerFactory $marshalerFactory
+     * @param Marshaler $marshaler
      */
-    public function __construct(MarshalerFactory $marshalerFactory)
+    public function __construct(Marshaler $marshaler)
     {
-        $this->marshalerFactory = $marshalerFactory;
+        $this->marshaler = $marshaler;
     }
 
     /**
@@ -31,7 +31,7 @@ class GetItem implements Payload
      */
     public function get(string $table, array $keys): array
     {
-        return $this->getPayload($this->marshalerFactory->make(), $table, $keys);
+        return $this->getPayload($this->marshaler, $table, $keys);
     }
 
     /**
@@ -42,7 +42,7 @@ class GetItem implements Payload
      * @param  array     $keys
      * @return array
      */
-    private function getPayload(\Aws\DynamoDb\Marshaler $marshaler, string $table, array $keys): array
+    private function getPayload(Marshaler $marshaler, string $table, array $keys): array
     {
         $payload = [
             'TableName' => $table,

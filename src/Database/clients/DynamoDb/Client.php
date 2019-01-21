@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Database\Client\DynamoDb;
+namespace App\Database\Clients\DynamoDb;
 
-use App\Database\Client\DocumentStoreClient;
+use App\Database\Clients\DocumentStoreClient;
 use Aws\AwsClientInterface;
 use Aws\DynamoDb\Exception\DynamoDbException;
 

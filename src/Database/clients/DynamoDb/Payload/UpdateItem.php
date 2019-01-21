@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Database\Client\DynamoDb\Payload;
+namespace App\Database\Clients\DynamoDb\Payload;
 
-use App\Database\Client\DynamoDb\MarshalerFactory;
+use App\Database\Clients\DynamoDb\Marshaler;
 
 /**
  * class creats UpdateItem payloads to use with AWS SDK DynamoDbClient class
@@ -10,9 +10,9 @@ use App\Database\Client\DynamoDb\MarshalerFactory;
 class UpdateItem implements Payload
 {
     /**
-     * @var MarshalerFactory
+     * @var Marshaler
      */
-    private $marshalerFactory;
+    private $marshaler;
 
     /**
      * document name
@@ -64,11 +64,11 @@ class UpdateItem implements Payload
     private $updateType = 'set';
 
     /**
-     * @param MarshalerFactory $marshalerFactory
+     * @param Marshaler $marshaler
      */
-    public function __construct(MarshalerFactory $marshalerFactory)
+    public function __construct(Marshaler $marshaler)
     {
-        $this->marshalerFactory = $marshalerFactory;
+        $this->marshaler = $marshaler;
     }
 
     /**
@@ -153,7 +153,7 @@ class UpdateItem implements Payload
         $this->setTable($table);
         $this->setUpdateData($data);
 
-        return $this->getPayload($this->marshalerFactory->make());
+        return $this->getPayload($this->marshaler);
     }
 
     /**
@@ -188,7 +188,7 @@ class UpdateItem implements Payload
      * @param  array     $data
      * @return array
      */
-    private function getPayload(\Aws\DynamoDb\Marshaler $marshaler): array
+    private function getPayload(Marshaler $marshaler): array
     {
         $payload['TableName'] = $this->table;
         $payload['Key'] = $marshaler->marshalItem($this->key);

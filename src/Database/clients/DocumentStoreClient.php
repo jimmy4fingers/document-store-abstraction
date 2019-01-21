@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database\Client;
+namespace App\Database\Clients;
 
 /**
  * Storage client Adaptor
@@ -10,6 +10,7 @@ interface DocumentStoreClient
     /**
      * add item to the storage engine
      *
+     * @param  string $table
      * @param  array $data
      * @return boolean
      */
@@ -18,6 +19,7 @@ interface DocumentStoreClient
     /**
      * update item in the storage engine
      *
+     * @param  string $table
      * @param  array $keys
      * @param  array $data
      * @return boolean

@@ -4,8 +4,8 @@ namespace App\Tests\Database\Client\DynamoDb\Payload;
 
 use PHPUnit\Framework\TestCase;
 
-use App\Database\Client\DynamoDb\Payload\UpdateItem;
-use App\Database\Client\DynamoDb\MarshalerFactory;
+use App\Database\Clients\DynamoDb\Payload\UpdateItem;
+use App\Database\Clients\DynamoDb\MarshalerAdapter;
 
 class UpdateItemTest extends TestCase
 {
@@ -16,7 +16,7 @@ class UpdateItemTest extends TestCase
         $searchKeys = ['id'=>'123'];
         $returnValue = 'UPDATE_OLD';
 
-        $updateItem = new UpdateItem(new MarshalerFactory());
+        $updateItem = new UpdateItem(new MarshalerAdapter());
         $updateItem->setKey($searchKeys);
         $updateItem->setReturnValues($returnValue);
         $payload = $updateItem->get($table, $data);
@@ -29,8 +29,7 @@ class UpdateItemTest extends TestCase
         $this->assertTrue(array_key_exists('UpdateExpression', $payload));
 
         // mock payload values
-        $marshalerFactory = new MarshalerFactory();
-        $marshaler = $marshalerFactory->make();
+        $marshaler = new MarshalerAdapter();
         $updateExp = [];
         $expressionAttributes = [];
 
