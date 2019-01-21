@@ -4,7 +4,6 @@ namespace App\Database\Clients\DynamoDb;
 
 use App\Database\Clients\DocumentStoreClient;
 use Aws\AwsClientInterface;
-use Aws\DynamoDb\Exception\DynamoDbException;
 
 /**
  * AWS DynamoDB client [Adaptor]
@@ -26,11 +25,11 @@ class Client implements DocumentStoreClient
     private $factory;
 
     /**
-     * @todo create handler object for responses
+     * client response
      *
-     * @var [type]
+     * @var mixed
      */
-    private $responseHandeler;
+    private $response;
 
     /**
      * @param AwsClientInterface $awsDynamoClient
@@ -53,13 +52,9 @@ class Client implements DocumentStoreClient
     {
         $putItemPayload = $this->factory->makePutItem();
 
-        try {
-            $this->responseHandeler = $this->dynamoDbClient->putItem(
-                $putItemPayload->get($table, $data)
-            );
-        } catch (DynamoDbException $e) {
-            return false;
-        }
+        $this->response = $this->dynamoDbClient->putItem(
+            $putItemPayload->get($table, $data)
+        );
 
         return true;
     }
@@ -79,13 +74,9 @@ class Client implements DocumentStoreClient
         // add search keys
         $updateItemPayload->setKey($keys);
 
-        try {
-            $this->responseHandeler = $this->dynamoDbClient->updateItem(
-                $updateItemPayload->get($table, $data)
-            );
-        } catch (DynamoDbException $e) {
-            return false;
-        }
+        $this->response = $this->dynamoDbClient->updateItem(
+            $updateItemPayload->get($table, $data)
+        );
 
         return true;
     }
@@ -101,19 +92,15 @@ class Client implements DocumentStoreClient
     {
         $getItemPayload = $this->factory->makeGetItem();
 
-        try {
-            $this->responseHandeler = $this->dynamoDbClient->getItem(
-                $getItemPayload->get($table, $keys)
-            );
-        } catch (DynamoDbException $e) {
-            return [];
-        }
+        $this->response = $this->dynamoDbClient->getItem(
+            $getItemPayload->get($table, $keys)
+        );
 
-        if (is_null($this->responseHandeler['Item'])) {
+        if (is_null($this->response['Item'])) {
             return [];
         }
-        
-        return $this->responseHandeler['Item'];
+    
+        return $this->response['Item'];
     }
 
      /**
@@ -123,6 +110,6 @@ class Client implements DocumentStoreClient
       */
     public function getLastResponse()
     {
-        return $this->responseHandeler;
+        return $this->response;
     }
 }

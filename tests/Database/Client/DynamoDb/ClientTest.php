@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use App\Database\Clients\DynamoDb\Client;
 use App\Database\Clients\DynamoDb\MarshalerAdapter;
 use App\Database\Clients\DynamoDb\PayloadFactory;
+use App\Database\Clients\DynamoDb\ClientHandler;
 use App\Database\Clients\DocumentStoreClient;
 use App\Tests\Mocks\AWSMocksFactory;
 
@@ -38,6 +39,7 @@ class ClientTest extends TestCase
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
+        $client = new ClientHandler($client);
 
         $data = ['test'=>'data'];
 
@@ -50,6 +52,7 @@ class ClientTest extends TestCase
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
+        $client = new ClientHandler($client);
 
         $data = ['test'=>'data'];
         $searchKeys = ['id' => 123];
@@ -63,6 +66,7 @@ class ClientTest extends TestCase
         $dynamoDbClient = self::$awsFactory->mockDynamoDbClient(['test']);
 
         $client = new Client($dynamoDbClient, new PayloadFactory(new MarshalerAdapter()));
+        $client = new ClientHandler($client);
 
         $data = ['test'=>'data'];
         $searchKeys = ['id' => 123];
